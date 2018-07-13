@@ -196,7 +196,7 @@ export const asyncRouterMap = [
       { path: 'create', component: () => import('@/views/example/create'), name: 'createArticle', meta: { title: 'createArticle', icon: 'edit' }},
       { path: 'edit/:id(\\d+)', component: () => import('@/views/example/edit'), name: 'editArticle', meta: { title: 'editArticle', noCache: true }, hidden: true },
       { path: 'list', component: () => import('@/views/example/list'), name: 'articleList', meta: { title: 'articleList', icon: 'list' }},
-      { path: 'menu', component: () => import('@/views/example/menu'), name: 'editMenu', meta: { title: 'editMenu', icon: 'list' }}
+      { path: 'articleMenu', component: () => import('@/views/example/articleMenu'), name: 'articleMenu', meta: { title: 'articleMenu', icon: 'articleMenu' }}
     ]
   },
 

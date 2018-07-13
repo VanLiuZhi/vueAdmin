@@ -14,7 +14,7 @@
       <div class="createPost-main-container">
         <el-row>
 
-          <Warning />
+          <!--<Warning />-->
 
           <el-col :span="21">
             <el-form-item style="margin-bottom: 40px;" prop="title">
@@ -63,9 +63,9 @@
           <Tinymce :height=400 ref="editor" v-model="postForm.content" />
         </div>
 
-        <div style="margin-bottom: 20px;">
-          <Upload v-model="postForm.image_uri" />
-        </div>
+        <!--<div style="margin-bottom: 20px;">-->
+          <!--<Upload v-model="postForm.image_uri" />-->
+        <!--</div>-->
       </div>
     </el-form>
 
