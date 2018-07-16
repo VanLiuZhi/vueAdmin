@@ -21,63 +21,36 @@
       </el-select>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">{{$t('table.search')}}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">{{$t('table.add')}}</el-button>
-      <el-button class="filter-item" type="primary" :loading="downloadLoading" v-waves icon="el-icon-download" @click="handleDownload">{{$t('table.export')}}</el-button>
       <el-checkbox class="filter-item" style='margin-left:15px;' @change='tableKey=tableKey+1' v-model="showReviewer">{{$t('table.reviewer')}}</el-checkbox>
     </div>
 
     <!--表格-->
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" border fit highlight-current-row
+    <el-table :key='tableKey' :data="list" v-loading="listLoading" border  fit highlight-current-row element-loading-text="Loading"
               style="width: 100%;min-height:1000px;">
-      <el-table-column align="center" :label="$t('table.id')" width="65">
+      <el-table-column align="center" label="ID" width="65">
         <template slot-scope="scope">
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="150px" align="center" :label="$t('table.date')">
+      <el-table-column label="Name" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="150px" :label="$t('table.title')">
+      <el-table-column label="Level" width="110" align="center">
         <template slot-scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>
-          <el-tag>{{scope.row.type | typeFilter}}</el-tag>
+          {{scope.row.level}}
         </template>
       </el-table-column>
-      <el-table-column width="110px" align="center" :label="$t('table.author')">
+      <el-table-column label="GUID">
         <template slot-scope="scope">
-          <span>{{scope.row.author}}</span>
+          {{scope.row.guid}}
         </template>
       </el-table-column>
-      <el-table-column width="110px" v-if='showReviewer' align="center" :label="$t('table.reviewer')">
+      <el-table-column align="center" label="Actions" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <span style='color:red;'>{{scope.row.reviewer}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="80px" :label="$t('table.importance')">
-        <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" icon-class="star" class="meta-item__icon" :key="n"></svg-icon>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" :label="$t('table.readings')" width="95">
-        <template slot-scope="scope">
-          <span v-if="scope.row.pageviews" class="link-type" @click='handleFetchPv(scope.row.pageviews)'>{{scope.row.pageviews}}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" :label="$t('table.status')" width="100">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" :label="$t('table.actions')" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{$t('table.edit')}}</el-button>
-          <el-button v-if="scope.row.status!='published'" size="mini" type="success" @click="handleModifyStatus(scope.row,'published')">{{$t('table.publish')}}
-          </el-button>
-          <el-button v-if="scope.row.status!='draft'" size="mini" @click="handleModifyStatus(scope.row,'draft')">{{$t('table.draft')}}
-          </el-button>
-          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">{{$t('table.delete')}}
+          <el-button type="success" size="mini" @click="handleUpdate(scope.row)">{{$t('table.edit')}}</el-button>
+          <el-button size="mini" type="danger" @click="deleteArticleMenu(scope.row.id)">{{$t('table.delete')}}
           </el-button>
         </template>
       </el-table-column>
@@ -85,22 +58,19 @@
 
     <!--分页-->
     <div class="pagination-container">
-      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="listQuery.page" :page-sizes="[5,10,20,30,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
 
-    <!--弹窗-->
+    <!--弹窗表单-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-
-
-      <el-form ref="form" :model="form" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
+      <el-form :rules="rules" ref="dataForm" :model="form" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
         <el-form-item label="菜单名称">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="菜单类型">
           <el-select v-model="form.type" placeholder="请选择菜单类型">
             <el-option label="文章" value="1"></el-option>
-            <!--<el-option label="区域二" value="beijing"></el-option>-->
           </el-select>
         </el-form-item>
         <el-form-item label="菜单级别">
@@ -111,58 +81,24 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="所属菜单" v-if="form.level !== '1'">
-          <el-select v-model="form.levelOneSelect" placeholder="请选择菜单类型" no-data-text="暂无数据" @change="selectChange" v-if="form.level === '2' || form.level === '3'">
-            <el-option
-              v-for="item in levelOne"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+          <el-select class="filter-item" v-model="form.levelOneSelect" placeholder="请选择菜单类型" no-data-text="暂无数据" @change="selectChange" v-if="form.level === '2' || form.level === '3'">
+            <el-option v-for="item in levelOne" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
           <el-select v-model="form.levelTwoSelect" placeholder="请选择菜单类型" v-if="form.level === '3'">
-            <el-option
-              v-for="item in levelTwo"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+            <el-option class="filter-item" v-for="item in levelTwo" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
       </el-form>
-
-
-      <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
-        <el-form-item :label="$t('table.type')" prop="type">
-          <el-select class="filter-item" v-model="temp.type" placeholder="Please select">
-            <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('table.date')" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item :label="$t('table.title')" prop="title">
-          <el-input v-model="temp.title"></el-input>
-        </el-form-item>
-        <el-form-item :label="$t('table.status')">
-          <el-select class="filter-item" v-model="temp.status" placeholder="Please select">
-            <el-option v-for="item in  statusOptions" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('table.importance')">
-          <el-rate style="margin-top:8px;" v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max='3'></el-rate>
-        </el-form-item>
-        <el-form-item :label="$t('table.remark')">
-          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="Please input" v-model="temp.remark">
-          </el-input>
-        </el-form-item>
-      </el-form>
+      <!--slot="footer" 这个插槽用来替换Dialog组件 按钮操作区的内容-->
       <div slot="footer" class="dialog-footer">
+        <!--关闭弹窗-->
         <el-button @click="dialogFormVisible = false">{{$t('table.cancel')}}</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{$t('table.confirm')}}</el-button>
-        <el-button v-else type="primary" @click="updateData">{{$t('table.confirm')}}</el-button>
+        <!--添加记录-->
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="createArticleMenu">{{$t('table.confirm')}}</el-button>
+        <!--更新记录-->
+        <el-button v-else type="primary" @click="editArticleMenu">{{$t('table.confirm')}}</el-button>
       </div>
     </el-dialog>
 
@@ -181,9 +117,10 @@
 </template>
 
 <script>
-  import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+  import { fetchPv, createArticle, updateArticle } from '@/api/article'
   import waves from '@/directive/waves' // 水波纹指令
   import { parseTime } from '@/utils'
+  import { getMenuForLive, createArticleMenu, listArticleMenu, deleteArticleMenu, editArticleMenu } from '@/api/article'
 
   const calendarTypeOptions = [
     { key: 'CN', display_name: 'China' },
@@ -199,17 +136,18 @@
   }, {})
 
   export default {
-    name: 'complexTable',
+    name: 'articleMenu',
     directives: {
       waves
     },
     data() {
       return {
-
+        // 添加记录时的表单数据
         form: {
           name: '',
           parent: '',
           level: '1',
+          guid: '',
           levelOneSelect: '',
           levelTwoSelect: '',
           levelThreeSelect: ''
@@ -222,7 +160,7 @@
           label: '双皮奶'
         }],
         levelTwo: [],
-        levelThree: [],
+        levelThree: '',
 
         tableKey: 0,
         list: null,
@@ -230,7 +168,7 @@
         listLoading: true,
         listQuery: {
           page: 1,
-          limit: 20,
+          limit: 5,
           importance: undefined,
           title: undefined,
           type: undefined,
@@ -241,15 +179,6 @@
         sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
         statusOptions: ['published', 'draft', 'deleted'],
         showReviewer: false,
-        temp: {
-          id: undefined,
-          importance: 1,
-          remark: '',
-          timestamp: new Date(),
-          title: '',
-          type: '',
-          status: 'published'
-        },
         dialogFormVisible: false,
         dialogStatus: '',
         textMap: {
@@ -259,9 +188,7 @@
         dialogPvVisible: false,
         pvData: [],
         rules: {
-          type: [{ required: true, message: 'type is required', trigger: 'change' }],
-          timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-          title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+          name: [{ required: true, message: 'name is required', trigger: 'blur' }]
         },
         downloadLoading: false
       }
@@ -283,13 +210,75 @@
       this.getList()
     },
     methods: {
+      selectChange(selectValue) {
+        getMenuForLive(selectValue).then(response => {})
+      },
+      deleteArticleMenu(value) {
+        deleteArticleMenu({ data: { id: value }}).then(response => {
+          const code = response.data.code
+          if (code === '0') {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.getList()
+          } else {
+            this.$message({
+              message: '操作失败',
+              type: 'error'
+            })
+          }
+        })
+      },
+      // 添加新的文章菜单
+      createArticleMenu() {
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate()
+        })
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            createArticleMenu(this.form).then(() => {
+              this.dialogFormVisible = false
+              this.$notify({
+                title: '成功',
+                message: '创建成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.getList()
+            })
+          }
+        })
+      },
+      // 编辑文章菜单
+      editArticleMenu() {
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            delete this.form.parent
+            const data = {
+              object: { 'guid': this.form.guid },
+              update: this.form
+            }
+            editArticleMenu(data).then(() => {
+              this.dialogFormVisible = false
+              this.$notify({
+                title: '成功',
+                message: '更新成功',
+                type: 'success',
+                duration: 2000
+              })
+            })
+            this.getList()
+          }
+        })
+      },
+      // 获取表格数据
       getList() {
         this.listLoading = true
-        fetchList(this.listQuery).then(response => {
-          this.list = response.data.items
-          this.total = response.data.total
-
-          // Just to simulate the time of the request
+        listArticleMenu(this.listQuery).then(response => {
+          const res = response.data
+          this.list = res.data.item
+          this.total = res.data.total
           setTimeout(() => {
             this.listLoading = false
           }, 1.5 * 1000)
@@ -359,6 +348,9 @@
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })
+        console.log(row)
+        this.form.name = row.name
+        this.form.guid = row.guid
       },
       updateData() {
         this.$refs['dataForm'].validate((valid) => {
@@ -398,20 +390,6 @@
         fetchPv(pv).then(response => {
           this.pvData = response.data.pvData
           this.dialogPvVisible = true
-        })
-      },
-      handleDownload() {
-        this.downloadLoading = true
-        import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-          const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-          const data = this.formatJson(filterVal, this.list)
-          excel.export_json_to_excel({
-            header: tHeader,
-            data,
-            filename: 'table-list'
-          })
-          this.downloadLoading = false
         })
       },
       formatJson(filterVal, jsonData) {

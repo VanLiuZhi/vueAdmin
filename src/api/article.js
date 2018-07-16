@@ -45,12 +45,13 @@ import { porxyService } from '../utils/request'
 // 代理请求对象实例
 const service = porxyService()
 
-const baseApiUrl = '/api/vadmin/api/menu'
+const baseApiUrl = '/api/vadmin/api/'
 
 const getUrl = function(url) {
   return baseApiUrl + url
 }
 
+// 通过guid获取文章分类菜单名称
 export function getMenuForLive(params) {
   return service({
     url: getUrl('/getMenuForLive'),
@@ -59,17 +60,35 @@ export function getMenuForLive(params) {
   })
 }
 
-export function createMenu(params) {
+//
+export function createArticleMenu(params) {
   return service({
-    url: getUrl('/createMenu'),
+    url: getUrl('/createArticleMenu'),
     method: 'post',
     data: params
   })
 }
 
-export function getMenuTable(params) {
+export function listArticleMenu(params) {
   return service({
-    url: getUrl('/getMenuTable'),
+    url: getUrl('/listArticleMenu'),
+    method: 'post',
+    data: params
+  })
+}
+
+// 删除文章菜单分类
+export function deleteArticleMenu(params) {
+  return service({
+    url: getUrl('/deleteArticleMenu'),
+    method: 'post',
+    data: params
+  })
+}
+
+export function editArticleMenu(params) {
+  return service({
+    url: getUrl('/editArticleMenu'),
     method: 'post',
     data: params
   })
