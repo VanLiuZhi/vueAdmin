@@ -3,12 +3,12 @@
     <el-form class="form-container" :model="postForm" :rules="rules" ref="postForm">
 
       <sticky :className="'sub-navbar '+postForm.status">
-        <CommentDropdown v-model="postForm.comment_disabled" />
-        <PlatformDropdown v-model="postForm.platforms" />
-        <SourceUrlDropdown v-model="postForm.source_uri" />
+        <!--<CommentDropdown v-model="postForm.comment_disabled" />-->
+        <!--<PlatformDropdown v-model="postForm.platforms" />-->
+        <!--<SourceUrlDropdown v-model="postForm.source_uri" />-->
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">发布
         </el-button>
-        <el-button v-loading="loading" type="warning" @click="draftForm">草稿</el-button>
+        <!--<el-button v-loading="loading" type="warning" @click="draftForm">草稿</el-button>-->
       </sticky>
 
       <div class="createPost-main-container">
@@ -26,6 +26,15 @@
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
+                  <el-form-item label-width="45px" label="分类:" class="postInfo-container-item">
+                    <el-select v-model="postForm.author" filterable remote placeholder="搜索用户" :remote-method="getRemoteUserList">
+                      <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+
+                <el-col :span="8">
                   <el-form-item label-width="45px" label="作者:" class="postInfo-container-item">
                     <el-select v-model="postForm.author" filterable remote placeholder="搜索用户" :remote-method="getRemoteUserList">
                       <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item">
@@ -41,23 +50,23 @@
                   </el-form-item>
                 </el-col>
 
-                <el-col :span="8">
-                  <el-form-item label-width="60px" label="重要性:" class="postInfo-container-item">
-                    <el-rate style="margin-top:8px;" v-model="postForm.importance" :max='3' :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :low-threshold="1"
-                      :high-threshold="3">
-                    </el-rate>
-                  </el-form-item>
-                </el-col>
+                <!--<el-col :span="8">-->
+                  <!--<el-form-item label-width="60px" label="重要性:" class="postInfo-container-item">-->
+                    <!--<el-rate style="margin-top:8px;" v-model="postForm.importance" :max='3' :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :low-threshold="1"-->
+                      <!--:high-threshold="3">-->
+                    <!--</el-rate>-->
+                  <!--</el-form-item>-->
+                <!--</el-col>-->
               </el-row>
             </div>
           </el-col>
         </el-row>
 
-        <el-form-item style="margin-bottom: 40px;" label-width="45px" label="摘要:">
-          <el-input type="textarea" class="article-textarea" :rows="1" autosize placeholder="请输入内容" v-model="postForm.content_short">
-          </el-input>
-          <span class="word-counter" v-show="contentShortLength">{{contentShortLength}}字</span>
-        </el-form-item>
+        <!--<el-form-item style="margin-bottom: 40px;" label-width="45px" label="摘要:">-->
+          <!--<el-input type="textarea" class="article-textarea" :rows="1" autosize placeholder="请输入内容" v-model="postForm.content_short">-->
+          <!--</el-input>-->
+          <!--<span class="word-counter" v-show="contentShortLength">{{contentShortLength}}字</span>-->
+        <!--</el-form-item>-->
 
         <div class="editor-container">
           <Tinymce :height=400 ref="editor" v-model="postForm.content" />
