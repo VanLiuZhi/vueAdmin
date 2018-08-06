@@ -137,51 +137,51 @@ export const asyncRouterMap = [
     ]
   },
 
-  {
-    path: '/charts',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'charts',
-    meta: {
-      title: 'charts',
-      icon: 'chart'
-    },
-    children: [
-      { path: 'keyboard', component: () => import('@/views/charts/keyboard'), name: 'keyboardChart', meta: { title: 'keyboardChart', noCache: true }},
-      { path: 'line', component: () => import('@/views/charts/line'), name: 'lineChart', meta: { title: 'lineChart', noCache: true }},
-      { path: 'mixchart', component: () => import('@/views/charts/mixChart'), name: 'mixChart', meta: { title: 'mixChart', noCache: true }}
-    ]
-  },
+  // {
+  //   path: '/charts',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   name: 'charts',
+  //   meta: {
+  //     title: 'charts',
+  //     icon: 'chart'
+  //   },
+  //   children: [
+  //     { path: 'keyboard', component: () => import('@/views/charts/keyboard'), name: 'keyboardChart', meta: { title: 'keyboardChart', noCache: true }},
+  //     { path: 'line', component: () => import('@/views/charts/line'), name: 'lineChart', meta: { title: 'lineChart', noCache: true }},
+  //     { path: 'mixchart', component: () => import('@/views/charts/mixChart'), name: 'mixChart', meta: { title: 'mixChart', noCache: true }}
+  //   ]
+  // },
 
-  {
-    path: '/tab',
-    component: Layout,
-    children: [{
-      path: 'index',
-      component: () => import('@/views/tab/index'),
-      name: 'tab',
-      meta: { title: 'tab', icon: 'tab' }
-    }]
-  },
-
-  {
-    path: '/table',
-    component: Layout,
-    redirect: '/table/complex-table',
-    name: 'table',
-    meta: {
-      title: 'Table',
-      icon: 'table'
-    },
-    children: [
-      { path: 'dynamic-table', component: () => import('@/views/table/dynamicTable/index'), name: 'dynamicTable', meta: { title: 'dynamicTable' }},
-      { path: 'drag-table', component: () => import('@/views/table/dragTable'), name: 'dragTable', meta: { title: 'dragTable' }},
-      { path: 'inline-edit-table', component: () => import('@/views/table/inlineEditTable'), name: 'inlineEditTable', meta: { title: 'inlineEditTable' }},
-      { path: 'tree-table', component: () => import('@/views/table/treeTable/treeTable'), name: 'treeTableDemo', meta: { title: 'treeTable' }},
-      { path: 'custom-tree-table', component: () => import('@/views/table/treeTable/customTreeTable'), name: 'customTreeTableDemo', meta: { title: 'customTreeTable' }},
-      { path: 'complex-table', component: () => import('@/views/table/complexTable'), name: 'complexTable', meta: { title: 'complexTable' }}
-    ]
-  },
+  // {
+  //   path: '/tab',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     component: () => import('@/views/tab/index'),
+  //     name: 'tab',
+  //     meta: { title: 'tab', icon: 'tab' }
+  //   }]
+  // },
+  //
+  // {
+  //   path: '/table',
+  //   component: Layout,
+  //   redirect: '/table/complex-table',
+  //   name: 'table',
+  //   meta: {
+  //     title: 'Table',
+  //     icon: 'table'
+  //   },
+  //   children: [
+  //     { path: 'dynamic-table', component: () => import('@/views/table/dynamicTable/index'), name: 'dynamicTable', meta: { title: 'dynamicTable' }},
+  //     { path: 'drag-table', component: () => import('@/views/table/dragTable'), name: 'dragTable', meta: { title: 'dragTable' }},
+  //     { path: 'inline-edit-table', component: () => import('@/views/table/inlineEditTable'), name: 'inlineEditTable', meta: { title: 'inlineEditTable' }},
+  //     { path: 'tree-table', component: () => import('@/views/table/treeTable/treeTable'), name: 'treeTableDemo', meta: { title: 'treeTable' }},
+  //     { path: 'custom-tree-table', component: () => import('@/views/table/treeTable/customTreeTable'), name: 'customTreeTableDemo', meta: { title: 'customTreeTable' }},
+  //     { path: 'complex-table', component: () => import('@/views/table/complexTable'), name: 'complexTable', meta: { title: 'complexTable' }}
+  //   ]
+  // },
 
   {
     path: '/example',
@@ -200,38 +200,38 @@ export const asyncRouterMap = [
     ]
   },
 
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/bar/profile',
-    name: 'nested',
-    meta: {
-      title: 'nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: '/nested/bar', // Must write the full path
-        component: () => import('@/views/nested/bar/index'), // Parent router-view
-        name: 'bar',
-        meta: { title: 'bar' },
-        children: [
-          {
-            path: 'profile',
-            component: () => import('@/views/nested/bar/profile'),
-            name: 'bar-profile',
-            meta: { title: 'barProfile' }
-          },
-          {
-            path: 'posts',
-            component: () => import('@/views/nested/bar/posts'),
-            name: 'bar-posts',
-            meta: { title: 'barPosts' }
-          }
-        ]
-      }
-    ]
-  },
+  // {
+  //   path: '/nested',
+  //   component: Layout,
+  //   redirect: '/nested/bar/profile',
+  //   name: 'nested',
+  //   meta: {
+  //     title: 'nested',
+  //     icon: 'nested'
+  //   },
+  //   children: [
+  //     {
+  //       path: '/nested/bar', // Must write the full path
+  //       component: () => import('@/views/nested/bar/index'), // Parent router-view
+  //       name: 'bar',
+  //       meta: { title: 'bar' },
+  //       children: [
+  //         {
+  //           path: 'profile',
+  //           component: () => import('@/views/nested/bar/profile'),
+  //           name: 'bar-profile',
+  //           meta: { title: 'barProfile' }
+  //         },
+  //         {
+  //           path: 'posts',
+  //           component: () => import('@/views/nested/bar/posts'),
+  //           name: 'bar-posts',
+  //           meta: { title: 'barPosts' }
+  //         }
+  //       ]
+  //     }
+  //   ]
+  // },
 
   {
     path: '/error',
@@ -255,30 +255,30 @@ export const asyncRouterMap = [
     children: [{ path: 'log', component: () => import('@/views/errorLog/index'), name: 'errorLog', meta: { title: 'errorLog', icon: 'bug' }}]
   },
 
-  {
-    path: '/excel',
-    component: Layout,
-    redirect: '/excel/export-excel',
-    name: 'excel',
-    meta: {
-      title: 'excel',
-      icon: 'excel'
-    },
-    children: [
-      { path: 'export-excel', component: () => import('@/views/excel/exportExcel'), name: 'exportExcel', meta: { title: 'exportExcel' }},
-      { path: 'export-selected-excel', component: () => import('@/views/excel/selectExcel'), name: 'selectExcel', meta: { title: 'selectExcel' }},
-      { path: 'upload-excel', component: () => import('@/views/excel/uploadExcel'), name: 'uploadExcel', meta: { title: 'uploadExcel' }}
-    ]
-  },
-
-  {
-    path: '/zip',
-    component: Layout,
-    redirect: '/zip/download',
-    alwaysShow: true,
-    meta: { title: 'zip', icon: 'zip' },
-    children: [{ path: 'download', component: () => import('@/views/zip/index'), name: 'exportZip', meta: { title: 'exportZip' }}]
-  },
+  // {
+  //   path: '/excel',
+  //   component: Layout,
+  //   redirect: '/excel/export-excel',
+  //   name: 'excel',
+  //   meta: {
+  //     title: 'excel',
+  //     icon: 'excel'
+  //   },
+  //   children: [
+  //     { path: 'export-excel', component: () => import('@/views/excel/exportExcel'), name: 'exportExcel', meta: { title: 'exportExcel' }},
+  //     { path: 'export-selected-excel', component: () => import('@/views/excel/selectExcel'), name: 'selectExcel', meta: { title: 'selectExcel' }},
+  //     { path: 'upload-excel', component: () => import('@/views/excel/uploadExcel'), name: 'uploadExcel', meta: { title: 'uploadExcel' }}
+  //   ]
+  // },
+  //
+  // {
+  //   path: '/zip',
+  //   component: Layout,
+  //   redirect: '/zip/download',
+  //   alwaysShow: true,
+  //   meta: { title: 'zip', icon: 'zip' },
+  //   children: [{ path: 'download', component: () => import('@/views/zip/index'), name: 'exportZip', meta: { title: 'exportZip' }}]
+  // },
 
   {
     path: '/theme',
@@ -287,18 +287,18 @@ export const asyncRouterMap = [
     children: [{ path: 'index', component: () => import('@/views/theme/index'), name: 'theme', meta: { title: 'theme', icon: 'theme' }}]
   },
 
-  {
-    path: '/clipboard',
-    component: Layout,
-    redirect: 'noredirect',
-    children: [{ path: 'index', component: () => import('@/views/clipboard/index'), name: 'clipboardDemo', meta: { title: 'clipboardDemo', icon: 'clipboard' }}]
-  },
+  // {
+  //   path: '/clipboard',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   children: [{ path: 'index', component: () => import('@/views/clipboard/index'), name: 'clipboardDemo', meta: { title: 'clipboardDemo', icon: 'clipboard' }}]
+  // },
 
-  {
-    path: '/i18n',
-    component: Layout,
-    children: [{ path: 'index', component: () => import('@/views/i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
-  },
+  // {
+  //   path: '/i18n',
+  //   component: Layout,
+  //   children: [{ path: 'index', component: () => import('@/views/i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
+  // },
 
   { path: '*', redirect: '/404', hidden: true }
 ]
