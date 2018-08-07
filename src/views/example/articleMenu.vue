@@ -26,7 +26,7 @@
 
     <!--表格-->
     <el-table :key='tableKey' :data="list" v-loading="listLoading" border  fit highlight-current-row element-loading-text="Loading"
-              style="width: 100%;min-height:1000px;">
+              style="width: 100%;min-height:500px;">
       <el-table-column align="center" label="ID" width="65">
         <template slot-scope="scope">
           <span>{{scope.row.id}}</span>
@@ -50,7 +50,7 @@
       <el-table-column align="center" label="Actions" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="success" size="mini" @click="handleUpdate(scope.row)">{{$t('table.edit')}}</el-button>
-          <el-button size="mini" type="danger" @click="deleteArticleMenu(scope.row.id)">{{$t('table.delete')}}
+          <el-button size="mini" type="danger" @click="deleteArticleClassify(scope.row.id)">{{$t('table.delete')}}
           </el-button>
         </template>
       </el-table-column>
@@ -66,11 +66,12 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="form" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
         <el-form-item label="菜单名称">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.name" style="max-width: 244px"></el-input>
         </el-form-item>
-        <el-form-item label="菜单类型">
-          <el-select v-model="form.type" placeholder="请选择菜单类型">
-            <el-option label="文章" value="1"></el-option>
+        <el-form-item label="菜单分类">
+          <el-select v-model="form.parent" filterable remote placeholder="搜索分类" :remote-method="remoteArticleClassifyList">
+            <el-option v-for="(item,index) in ArticleClassifyList" :key="index" :label="item.name" :value="item.value">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="菜单级别">
@@ -80,25 +81,15 @@
             <el-radio label="3" border>三级</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="所属菜单" v-if="form.level !== '1'">
-          <el-select class="filter-item" v-model="form.levelOneSelect" placeholder="请选择菜单类型" no-data-text="暂无数据" @change="selectChange" v-if="form.level === '2' || form.level === '3'">
-            <el-option v-for="item in levelOne" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-          <el-select v-model="form.levelTwoSelect" placeholder="请选择菜单类型" v-if="form.level === '3'">
-            <el-option class="filter-item" v-for="item in levelTwo" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
       </el-form>
       <!--slot="footer" 这个插槽用来替换Dialog组件 按钮操作区的内容-->
       <div slot="footer" class="dialog-footer">
         <!--关闭弹窗-->
         <el-button @click="dialogFormVisible = false">{{$t('table.cancel')}}</el-button>
         <!--添加记录-->
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="createArticleMenu">{{$t('table.confirm')}}</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="createArticleClassify">{{$t('table.confirm')}}</el-button>
         <!--更新记录-->
-        <el-button v-else type="primary" @click="editArticleMenu">{{$t('table.confirm')}}</el-button>
+        <el-button v-else type="primary" @click="editArticleClassify">{{$t('table.confirm')}}</el-button>
       </div>
     </el-dialog>
 
@@ -120,7 +111,7 @@
   import { fetchPv, createArticle, updateArticle } from '@/api/article'
   import waves from '@/directive/waves' // 水波纹指令
   import { parseTime } from '@/utils'
-  import { getMenuForLive, createArticleMenu, listArticleMenu, deleteArticleMenu, editArticleMenu } from '@/api/article'
+  import { getMenuForLive, createArticleClassify, listArticleClassify, deleteArticleClassify, editArticleClassify, getArticleClassifyList } from '@/api/article'
 
   const calendarTypeOptions = [
     { key: 'CN', display_name: 'China' },
@@ -142,26 +133,14 @@
     },
     data() {
       return {
+        ArticleClassifyList: [],
         // 添加记录时的表单数据
         form: {
           name: '',
           parent: '',
           level: '1',
-          guid: '',
-          levelOneSelect: '',
-          levelTwoSelect: '',
-          levelThreeSelect: ''
+          guid: ''
         },
-        levelOne: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }],
-        levelTwo: [],
-        levelThree: '',
-
         tableKey: 0,
         list: null,
         total: null,
@@ -210,11 +189,18 @@
       this.getList()
     },
     methods: {
+      remoteArticleClassifyList(query) {
+        getArticleClassifyList({ name: query }).then(response => {
+          console.log(response.data.data.items)
+          if (!response.data.data.items) return
+          this.ArticleClassifyList = response.data.data.items.map(v => { return { name: v.name, value: v.guid } })
+        })
+      },
       selectChange(selectValue) {
         getMenuForLive(selectValue).then(response => {})
       },
-      deleteArticleMenu(value) {
-        deleteArticleMenu({ data: { id: value }}).then(response => {
+      deleteArticleClassify(value) {
+        deleteArticleClassify({ data: { id: value }}).then(response => {
           const code = response.data.code
           if (code === '0') {
             this.$message({
@@ -230,14 +216,14 @@
           }
         })
       },
-      // 添加新的文章菜单
-      createArticleMenu() {
+      // 添加新的文章分类
+      createArticleClassify() {
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            createArticleMenu(this.form).then(() => {
+            createArticleClassify(this.form).then(() => {
               this.dialogFormVisible = false
               this.$notify({
                 title: '成功',
@@ -251,7 +237,7 @@
         })
       },
       // 编辑文章菜单
-      editArticleMenu() {
+      editArticleClassify() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             delete this.form.parent
@@ -259,7 +245,7 @@
               object: { 'guid': this.form.guid },
               update: this.form
             }
-            editArticleMenu(data).then(() => {
+            editArticleClassify(data).then(() => {
               this.dialogFormVisible = false
               this.$notify({
                 title: '成功',
@@ -275,7 +261,7 @@
       // 获取表格数据
       getList() {
         this.listLoading = true
-        listArticleMenu(this.listQuery).then(response => {
+        listArticleClassify(this.listQuery).then(response => {
           const res = response.data
           this.list = res.data.item
           this.total = res.data.total

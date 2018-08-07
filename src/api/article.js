@@ -61,36 +61,43 @@ export function getMenuForLive(params) {
 }
 
 //
-export function createArticleMenu(params) {
+export function createArticleClassify(params) {
   return service({
-    url: getUrl('/createArticleMenu'),
+    url: getUrl('/createArticleClassify'),
     method: 'post',
     data: params
   })
 }
 
-export function listArticleMenu(params) {
+export function listArticleClassify(params) {
   return service({
-    url: getUrl('/listArticleMenu'),
+    url: getUrl('/listArticleClassify'),
     method: 'post',
     data: params
   })
 }
 
 // 删除文章菜单分类
-export function deleteArticleMenu(params) {
+export function deleteArticleClassify(params) {
   return service({
-    url: getUrl('/deleteArticleMenu'),
+    url: getUrl('/deleteArticleClassify'),
     method: 'post',
     data: params
   })
 }
 
-export function editArticleMenu(params) {
+export function editArticleClassify(params) {
   return service({
-    url: getUrl('/editArticleMenu'),
+    url: getUrl('/editArticleClassify'),
     method: 'post',
     data: params
   })
 }
 
+export function getArticleClassifyList(params) {
+  return service({
+    url: '/api/vadmin/article_api/getArticleClassifyList',
+    method: 'post',
+    data: params
+  })
+}

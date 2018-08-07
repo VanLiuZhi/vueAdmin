@@ -14,6 +14,7 @@ import store from './store'
 import i18n from './lang' // Internationalization
 import './icons' // icon
 import './errorLog'// error log
+// 注释则取消权限验证，该部分代码会对当前用户拥有的权限和路由表匹配，只生成能访问的route
 import './permission' // permission control
 import './mock' // simulation data
 

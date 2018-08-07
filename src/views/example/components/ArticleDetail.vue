@@ -27,7 +27,7 @@
               <el-row>
                 <el-col :span="8">
                   <el-form-item label-width="45px" label="分类:" class="postInfo-container-item">
-                    <el-select v-model="postForm.author" filterable remote placeholder="搜索用户" :remote-method="getRemoteUserList">
+                    <el-select v-model="postForm.author" filterable remote placeholder="搜索分类" :remote-method="getRemoteUserList">
                       <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item">
                       </el-option>
                     </el-select>
@@ -36,7 +36,7 @@
 
                 <el-col :span="8">
                   <el-form-item label-width="45px" label="作者:" class="postInfo-container-item">
-                    <el-select v-model="postForm.author" filterable remote placeholder="搜索用户" :remote-method="getRemoteUserList">
+                    <el-select v-model="postForm.author" filterable remote placeholder="填写作者" :remote-method="getRemoteUserList">
                       <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item">
                       </el-option>
                     </el-select>
@@ -62,11 +62,11 @@
           </el-col>
         </el-row>
 
-        <!--<el-form-item style="margin-bottom: 40px;" label-width="45px" label="摘要:">-->
-          <!--<el-input type="textarea" class="article-textarea" :rows="1" autosize placeholder="请输入内容" v-model="postForm.content_short">-->
-          <!--</el-input>-->
-          <!--<span class="word-counter" v-show="contentShortLength">{{contentShortLength}}字</span>-->
-        <!--</el-form-item>-->
+        <el-form-item style="margin-bottom: 40px;" label-width="45px" label="摘要:">
+          <el-input type="textarea" class="article-textarea" :rows="1" autosize placeholder="请输入内容" v-model="postForm.content_short">
+          </el-input>
+          <span class="word-counter" v-show="contentShortLength">{{contentShortLength}}字</span>
+        </el-form-item>
 
         <div class="editor-container">
           <Tinymce :height=400 ref="editor" v-model="postForm.content" />
