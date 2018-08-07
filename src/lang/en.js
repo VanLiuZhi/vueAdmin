@@ -57,7 +57,7 @@ export default {
     theme: 'Theme',
     clipboardDemo: 'Clipboard',
     i18n: 'I18n',
-    articleMenu: 'Article Menu'
+    articleClassify: 'Article Classify'
   },
   navbar: {
     logOut: 'Log Out',

@@ -24,13 +24,13 @@ export function fetchPv(pv) {
   })
 }
 
-export function createArticle(data) {
-  return request({
-    url: '/article/create',
-    method: 'post',
-    data
-  })
-}
+// export function createArticle(data) {
+//   return request({
+//     url: '/article/create',
+//     method: 'post',
+//     data
+//   })
+// }
 
 export function updateArticle(data) {
   return request({
@@ -51,16 +51,7 @@ const getUrl = function(url) {
   return baseApiUrl + url
 }
 
-// 通过guid获取文章分类菜单名称
-export function getMenuForLive(params) {
-  return service({
-    url: getUrl('/getMenuForLive'),
-    method: 'post',
-    data: params
-  })
-}
-
-//
+// 创建文章分类
 export function createArticleClassify(params) {
   return service({
     url: getUrl('/createArticleClassify'),
@@ -69,6 +60,7 @@ export function createArticleClassify(params) {
   })
 }
 
+// 文章列表数据
 export function listArticleClassify(params) {
   return service({
     url: getUrl('/listArticleClassify'),
@@ -77,7 +69,7 @@ export function listArticleClassify(params) {
   })
 }
 
-// 删除文章菜单分类
+// 删除文章分类
 export function deleteArticleClassify(params) {
   return service({
     url: getUrl('/deleteArticleClassify'),
@@ -86,6 +78,7 @@ export function deleteArticleClassify(params) {
   })
 }
 
+// 编辑文章分类
 export function editArticleClassify(params) {
   return service({
     url: getUrl('/editArticleClassify'),
@@ -94,9 +87,28 @@ export function editArticleClassify(params) {
   })
 }
 
+// 查询文章分类，返回list
 export function getArticleClassifyList(params) {
   return service({
     url: '/api/vadmin/article_api/getArticleClassifyList',
+    method: 'post',
+    data: params
+  })
+}
+
+// 查询文章分类，返回list
+export function saveArticle(params) {
+  return service({
+    url: '/api/vadmin/article_api/saveArticle',
+    method: 'post',
+    data: params
+  })
+}
+
+// 创建文章
+export function createArticle(params) {
+  return service({
+    url: getUrl('/createArticle'),
     method: 'post',
     data: params
   })

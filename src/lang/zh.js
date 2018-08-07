@@ -57,7 +57,7 @@ export default {
     theme: '换肤',
     clipboardDemo: 'Clipboard',
     i18n: '国际化',
-    articleMenu: '文章分类'
+    articleClassify: '文章分类'
   },
   navbar: {
     logOut: '退出登录',

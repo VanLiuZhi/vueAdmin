@@ -111,7 +111,7 @@
   import { fetchPv, createArticle, updateArticle } from '@/api/article'
   import waves from '@/directive/waves' // 水波纹指令
   import { parseTime } from '@/utils'
-  import { getMenuForLive, createArticleClassify, listArticleClassify, deleteArticleClassify, editArticleClassify, getArticleClassifyList } from '@/api/article'
+  import { createArticleClassify, listArticleClassify, deleteArticleClassify, editArticleClassify, getArticleClassifyList } from '@/api/article'
 
   const calendarTypeOptions = [
     { key: 'CN', display_name: 'China' },
@@ -127,7 +127,7 @@
   }, {})
 
   export default {
-    name: 'articleMenu',
+    name: 'articleClassify',
     directives: {
       waves
     },
@@ -195,9 +195,6 @@
           if (!response.data.data.items) return
           this.ArticleClassifyList = response.data.data.items.map(v => { return { name: v.name, value: v.guid } })
         })
-      },
-      selectChange(selectValue) {
-        getMenuForLive(selectValue).then(response => {})
       },
       deleteArticleClassify(value) {
         deleteArticleClassify({ data: { id: value }}).then(response => {

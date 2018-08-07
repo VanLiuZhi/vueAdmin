@@ -27,8 +27,8 @@
               <el-row>
                 <el-col :span="8">
                   <el-form-item label-width="45px" label="分类:" class="postInfo-container-item">
-                    <el-select v-model="postForm.author" filterable remote placeholder="搜索分类" :remote-method="getRemoteUserList">
-                      <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item">
+                    <el-select v-model="postForm.articlemenu" filterable remote placeholder="搜索分类" :remote-method="remoteArticleClassifyList">
+                      <el-option v-for="(item,index) in ArticleClassifyList" :key="index" :label="item.name" :value="item.value">
                       </el-option>
                     </el-select>
                   </el-form-item>
@@ -36,10 +36,11 @@
 
                 <el-col :span="8">
                   <el-form-item label-width="45px" label="作者:" class="postInfo-container-item">
-                    <el-select v-model="postForm.author" filterable remote placeholder="填写作者" :remote-method="getRemoteUserList">
-                      <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item">
-                      </el-option>
-                    </el-select>
+                    <!--<el-select v-model="postForm.author" filterable remote placeholder="填写作者" :remote-method="getRemoteUserList">-->
+                      <!--<el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item">-->
+                      <!--</el-option>-->
+                    <!--</el-select>-->
+                    <el-input v-model="postForm.author" placeholder="请输入内容"></el-input>
                   </el-form-item>
                 </el-col>
 
@@ -63,7 +64,7 @@
         </el-row>
 
         <el-form-item style="margin-bottom: 40px;" label-width="45px" label="摘要:">
-          <el-input type="textarea" class="article-textarea" :rows="1" autosize placeholder="请输入内容" v-model="postForm.content_short">
+          <el-input type="textarea" class="article-textarea" :rows="1" autosize placeholder="请输入内容" v-model="postForm.abstract">
           </el-input>
           <span class="word-counter" v-show="contentShortLength">{{contentShortLength}}字</span>
         </el-form-item>
@@ -71,7 +72,6 @@
         <div class="editor-container">
           <Tinymce :height=400 ref="editor" v-model="postForm.content" />
         </div>
-
         <!--<div style="margin-bottom: 20px;">-->
           <!--<Upload v-model="postForm.image_uri" />-->
         <!--</div>-->
@@ -90,22 +90,23 @@ import 'vue-multiselect/dist/vue-multiselect.min.css'// 多选框组件css
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validateURL } from '@/utils/validate'
 import { fetchArticle } from '@/api/article'
-import { userSearch } from '@/api/remoteSearch'
 import Warning from './Warning'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
+import { getArticleClassifyList, createArticle } from '@/api/article'
 
 const defaultForm = {
   status: 'draft',
   title: '', // 文章题目
   content: '', // 文章内容
-  content_short: '', // 文章摘要
+  abstract: '', // 文章摘要
   source_uri: '', // 文章外链
   image_uri: '', // 文章图片
   display_time: undefined, // 前台展示时间
   id: undefined,
   platforms: ['a-platform'],
   comment_disabled: false,
-  importance: 0
+  importance: 0,
+  times: 0
 }
 
 export default {
@@ -147,7 +148,7 @@ export default {
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
-      userListOptions: [],
+      ArticleClassifyList: [],
       rules: {
         image_uri: [{ validator: validateRequire }],
         title: [{ validator: validateRequire }],
@@ -158,7 +159,7 @@ export default {
   },
   computed: {
     contentShortLength() {
-      return this.postForm.content_short.length
+      return this.postForm.abstract.length
     }
   },
   created() {
@@ -175,7 +176,7 @@ export default {
         this.postForm = response.data
         // Just for test
         this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
+        this.postForm.abstract += `   Article Id:${this.postForm.id}`
       }).catch(err => {
         console.log(err)
       })
@@ -186,14 +187,16 @@ export default {
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$notify({
-            title: '成功',
-            message: '发布文章成功',
-            type: 'success',
-            duration: 2000
+          createArticle(this.postForm).then(response => {
+            this.$notify({
+              title: '成功',
+              message: '发布文章成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.postForm.status = 'published'
+            this.loading = false
           })
-          this.postForm.status = 'published'
-          this.loading = false
         } else {
           console.log('error submit!!')
           return false
@@ -216,10 +219,11 @@ export default {
       })
       this.postForm.status = 'draft'
     },
-    getRemoteUserList(query) {
-      userSearch(query).then(response => {
-        if (!response.data.items) return
-        this.userListOptions = response.data.items.map(v => v.name)
+    remoteArticleClassifyList(query) {
+      getArticleClassifyList({ name: query }).then(response => {
+        console.log(response.data.data.items)
+        if (!response.data.data.items) return
+        this.ArticleClassifyList = response.data.data.items.map(v => { return { name: v.name, value: v.guid } })
       })
     }
   }
