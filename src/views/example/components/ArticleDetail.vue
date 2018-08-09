@@ -70,7 +70,7 @@
         </el-form-item>
 
         <div class="editor-container">
-          <Tinymce :height=400 ref="editor" v-model="postForm.content" />
+          <Tinymce :height=400 ref="editor" v-model="postForm.content" value="postForm.content"/>
         </div>
         <!--<div style="margin-bottom: 20px;">-->
           <!--<Upload v-model="postForm.image_uri" />-->
@@ -89,7 +89,7 @@ import Multiselect from 'vue-multiselect'// 使用的一个多选框组件，ele
 import 'vue-multiselect/dist/vue-multiselect.min.css'// 多选框组件css
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validateURL } from '@/utils/validate'
-import { fetchArticle } from '@/api/article'
+import { getArticleForGUID } from '@/api/article'
 import Warning from './Warning'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 import { getArticleClassifyList, createArticle } from '@/api/article'
@@ -172,11 +172,12 @@ export default {
   },
   methods: {
     fetchData(id) {
-      fetchArticle(id).then(response => {
-        this.postForm = response.data
+      getArticleForGUID({ GUID: id }).then(response => {
+        this.postForm = response.data.data
         // Just for test
-        this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.abstract += `   Article Id:${this.postForm.id}`
+        this.postForm.status = 'edit'
+        // this.postForm.title += `   Article Id:${this.postForm.id}`
+        // this.postForm.abstract += `   Article Id:${this.postForm.id}`
       }).catch(err => {
         console.log(err)
       })

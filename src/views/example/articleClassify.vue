@@ -189,6 +189,13 @@
       this.getList()
     },
     methods: {
+      clearFromData() {
+        this.form.name = ''
+        this.form.parent = ''
+        this.form.level = '1'
+        this.form.guid = ''
+      },
+      // 请求文章分类数据
       remoteArticleClassifyList(query) {
         getArticleClassifyList({ name: query }).then(response => {
           console.log(response.data.data.items)
@@ -215,8 +222,9 @@
       },
       // 添加新的文章分类
       createArticleClassify() {
+        // this.clearFromData()
         this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
+          this.$refs['dataForm'].resetFields()
         })
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
@@ -302,7 +310,8 @@
         this.dialogStatus = 'create'
         this.dialogFormVisible = true
         this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
+          this.$refs['dataForm'].resetFields()
+          this.clearFromData()
         })
       },
       createData() {

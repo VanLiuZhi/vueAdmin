@@ -24,14 +24,6 @@ export function fetchPv(pv) {
   })
 }
 
-// export function createArticle(data) {
-//   return request({
-//     url: '/article/create',
-//     method: 'post',
-//     data
-//   })
-// }
-
 export function updateArticle(data) {
   return request({
     url: '/article/update',
@@ -45,7 +37,7 @@ import { porxyService } from '../utils/request'
 // 代理请求对象实例
 const service = porxyService()
 
-const baseApiUrl = '/api/vadmin/api/'
+const baseApiUrl = '/api/vadmin/api/' // 该路由下代理了通用接口的处理方式，若要使用自定义接口路由不要从这里开始
 
 const getUrl = function(url) {
   return baseApiUrl + url
@@ -60,7 +52,7 @@ export function createArticleClassify(params) {
   })
 }
 
-// 文章列表数据
+// 文章分类列表数据
 export function listArticleClassify(params) {
   return service({
     url: getUrl('/listArticleClassify'),
@@ -107,8 +99,39 @@ export function saveArticle(params) {
 
 // 创建文章
 export function createArticle(params) {
+  if (params.status === 'edit') {
+    const data = {
+      object: { 'guid': params.guid },
+      update: params
+    }
+    return service({
+      url: getUrl('/editArticle'),
+      method: 'post',
+      data: data
+    })
+  } else {
+    return service({
+      url: getUrl('/createArticle'),
+      method: 'post',
+      data: params
+    })
+  }
+}
+
+// 文章列表数据
+export function listArticle(params) {
   return service({
-    url: getUrl('/createArticle'),
+    url: getUrl('/listArticle'),
+    method: 'post',
+    data: params
+  })
+}
+
+// 通过guid获取文章数据
+export function getArticleForGUID(params) {
+  params.from_to_admin = true
+  return service({
+    url: '/api/vadmin/article_api/getArticleForGUID',
     method: 'post',
     data: params
   })
