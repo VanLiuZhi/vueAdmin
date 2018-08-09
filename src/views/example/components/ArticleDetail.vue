@@ -106,7 +106,8 @@ const defaultForm = {
   platforms: ['a-platform'],
   comment_disabled: false,
   importance: 0,
-  times: 0
+  times: 0,
+  article_menu_label: ''
 }
 
 export default {
@@ -176,6 +177,11 @@ export default {
         this.postForm = response.data.data
         // Just for test
         this.postForm.status = 'edit'
+        // 给分类下拉框赋初始值
+        this.ArticleClassifyList.push({
+          value: this.postForm.articlemenu,
+          name: this.postForm.article_menu_label
+        })
         // this.postForm.title += `   Article Id:${this.postForm.id}`
         // this.postForm.abstract += `   Article Id:${this.postForm.id}`
       }).catch(err => {
