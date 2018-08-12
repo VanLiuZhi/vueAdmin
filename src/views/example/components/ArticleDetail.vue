@@ -27,7 +27,7 @@
               <el-row>
                 <el-col :span="8">
                   <el-form-item label-width="45px" label="分类:" class="postInfo-container-item">
-                    <el-select v-model="postForm.articlemenu" filterable remote placeholder="搜索分类" :remote-method="remoteArticleClassifyList">
+                    <el-select v-model="postForm.articleclassify" filterable remote placeholder="搜索分类" :remote-method="remoteArticleClassifyList">
                       <el-option v-for="(item,index) in ArticleClassifyList" :key="index" :label="item.name" :value="item.value">
                       </el-option>
                     </el-select>
@@ -179,7 +179,7 @@ export default {
         this.postForm.status = 'edit'
         // 给分类下拉框赋初始值
         this.ArticleClassifyList.push({
-          value: this.postForm.articlemenu,
+          value: this.postForm.articleclassify,
           name: this.postForm.article_menu_label
         })
         // this.postForm.title += `   Article Id:${this.postForm.id}`
