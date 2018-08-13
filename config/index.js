@@ -13,10 +13,10 @@ module.exports = {
     // proxyTable: {},
     proxyTable: {
       '/api': { // 使用/api 来代替 target的内容，在ajax url 里面 /api/url
-        target: 'http://127.0.0.1:8080/',
+        target: 'http://0.0.0.0:8080/',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': 'http://127.0.0.1:8080/'
+          '^/api': 'http://0.0.0.0:8080/'
         }
       }
     },
