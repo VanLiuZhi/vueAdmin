@@ -19,7 +19,11 @@
           <span>{{scope.row.author}}</span>
         </template>
       </el-table-column>
-
+      <el-table-column width="120px" align="center" label="Title">
+        <template slot-scope="scope">
+          <span>{{scope.row.return_article_classify_name}}</span>
+        </template>
+      </el-table-column>
       <!--<el-table-column width="100px" label="Importance">-->
         <!--<template slot-scope="scope">-->
           <!--<svg-icon v-for="n in +scope.row.importance" icon-class="star" class="meta-item__icon" :key="n"></svg-icon>-->
