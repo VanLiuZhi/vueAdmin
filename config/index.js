@@ -64,7 +64,7 @@ module.exports = {
     index: path.resolve(__dirname, '../dist/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, '../static/vadmin'),
     assetsSubDirectory: 'static',
 
     /**
@@ -74,7 +74,7 @@ module.exports = {
      * then assetsPublicPath should be set to "/bar/".
      * In most cases please use '/' !!!
      */
-    assetsPublicPath: '/vue-element-admin/', // If you are deployed on the root path, please use '/'
+    assetsPublicPath: '/static/vadmin/', // If you are deployed on the root path, please use '/'
 
     /**
      * Source Maps

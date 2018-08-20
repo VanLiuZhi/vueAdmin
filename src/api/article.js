@@ -37,7 +37,12 @@ import { porxyService } from '../utils/request'
 // 代理请求对象实例
 const service = porxyService()
 
-const baseApiUrl = '/api/vadmin/api/' // 该路由下代理了通用接口的处理方式，若要使用自定义接口路由不要从这里开始
+let baseApiUrl = ''
+if (process.env.NODE_ENV === 'development') {
+  baseApiUrl = '/api/vadmin/api/' // 该路由下代理了通用接口的处理方式，若要使用自定义接口路由不要从这里开始
+} else {
+  baseApiUrl = '/vadmin/api' // 该路由下代理了通用接口的处理方式，若要使用自定义接口路由不要从这里开始
+}
 
 const getUrl = function(url) {
   return baseApiUrl + url
@@ -81,8 +86,14 @@ export function editArticleClassify(params) {
 
 // 查询文章分类，返回list
 export function getArticleClassifyList(params) {
+  let requestUrl = ''
+  if (process.env.NODE_ENV === 'development') {
+    requestUrl = '/api/vadmin/article_api/getArticleClassifyList'
+  } else {
+    requestUrl = '/vadmin/article_api/getArticleClassifyList'
+  }
   return service({
-    url: '/api/vadmin/article_api/getArticleClassifyList',
+    url: requestUrl,
     method: 'post',
     data: params
   })
@@ -90,8 +101,14 @@ export function getArticleClassifyList(params) {
 
 // 查询文章分类，返回list
 export function saveArticle(params) {
+  let requestUrl = ''
+  if (process.env.NODE_ENV === 'development') {
+    requestUrl = '/api/vadmin/article_api/saveArticle'
+  } else {
+    requestUrl = '/vadmin/article_api/saveArticle'
+  }
   return service({
-    url: '/api/vadmin/article_api/saveArticle',
+    url: requestUrl,
     method: 'post',
     data: params
   })
@@ -129,9 +146,15 @@ export function listArticle(params) {
 
 // 通过guid获取文章数据
 export function getArticleForGUID(params) {
+  let requestUrl = ''
+  if (process.env.NODE_ENV === 'development') {
+    requestUrl = '/api/vadmin/article_api/getArticleForGUID'
+  } else {
+    requestUrl = '/vadmin/article_api/getArticleForGUID'
+  }
   params.from_to_admin = true
   return service({
-    url: '/api/vadmin/article_api/getArticleForGUID',
+    url: requestUrl,
     method: 'post',
     data: params
   })

@@ -10,6 +10,7 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
 function resolve (dir) {
+  console.log(path.join(__dirname, '..', dir))
   return path.join(__dirname, '..', dir)
 }
 
