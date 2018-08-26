@@ -19,7 +19,7 @@
           <span>{{scope.row.author}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="120px" align="center" label="Title">
+      <el-table-column width="120px" align="center" label="Classify">
         <template slot-scope="scope">
           <span>{{scope.row.return_article_classify_name}}</span>
         </template>
